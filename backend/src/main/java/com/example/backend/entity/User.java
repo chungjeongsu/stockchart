@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity @Table(name = "user")
 @Getter@Setter@NoArgsConstructor@AllArgsConstructor
 public class User {
@@ -18,7 +20,7 @@ public class User {
     private String userId;
     @Column(name = "user_pw")
     private String userPw;
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subscribe_code")
-    private Subscribe subscribe;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Subscribe> subscribes;
 }

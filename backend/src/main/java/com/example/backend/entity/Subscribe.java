@@ -10,5 +10,14 @@ import lombok.Setter;
 @Getter@Setter@NoArgsConstructor@AllArgsConstructor
 public class Subscribe {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "")
+    @Column(name = "subscribe_code")
+    private Long subscribeCode;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_code")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stock_code")
+    private Stock stock;
 }
