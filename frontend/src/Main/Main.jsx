@@ -10,11 +10,14 @@ const Main = () => {
     });
 
     const [myStockList, setMyStockList] = useState([]);
-    const navigate = useNavigate();  // useNavigate 훅을 사용하여 네비게이트 함수 정의
+    const navigate = useNavigate();
+    const userId = localStorage.getItem("userId");
 
-    const getUserInfo = async () => {
+    const getUserInfo = async (userId) => {
         try {
-            const response = await axios.get("http://localhost:8080/main/user-info");
+            const response = await axios.get("http://localhost:8080/main/user-info",{
+                params: { userId }
+            });
             console.log(response.data.obj);
             setUserInfo({ userName: response.data.obj.userName });
         } catch (err) {
@@ -22,9 +25,11 @@ const Main = () => {
         }
     }
 
-    const getMyStockList = async () => {
+    const getMyStockList = async (userId) => {
         try {
-            const response = await axios.get("http://localhost:8080/main/my-stock-list");
+            const response = await axios.get("http://localhost:8080/main/my-stock-list",{
+                params: { userId }
+            });
             console.log(response.data.obj.myStockList);
             setMyStockList(response.data.obj.myStockList);
         } catch (err) {
@@ -32,11 +37,25 @@ const Main = () => {
         }
     }
 
-    useEffect(() => {
-        getUserInfo();
-        getMyStockList();
-    }, []);
 
+    const handleRemoveSubscribe = async (userId, stockCode) => {
+        const response = await axios.post("http://localhost:8080/main/remove-subscribe",
+            {userId, stockCode},{
+            headers:{
+                "Content-Type": 'application/json'
+            }}
+        );
+
+        alert(response.data.obj.stockName + "이 삭제되었습니다.");
+        setMyStockList(prevList => prevList.filter(stock => stock.stockCode !== stockCode));
+        
+    }
+
+    useEffect(() => {
+        console.log(userId);
+        getUserInfo(userId);
+        getMyStockList(userId);
+    }, [userId, navigate]);
     return (
         <div className='main'>
             <div className='main_userinfo'>
@@ -50,10 +69,11 @@ const Main = () => {
                         <p>Stock Name: {stock.stockName}</p>
                         <p>Stock Price: {stock.stockPrice}</p>
                         <p>Stock Amount: {stock.stockAmount}</p>
+                        <button onClick={() => handleRemoveSubscribe(userId,stock.stockCode)}>remove</button>
                     </div>
                 ))}
             </div>
-            <button onClick={() => navigate('/stock')}>Go to Stock List</button> {/* 버튼 추가 */}
+            <button onClick={() => navigate('/stock')}>Go to Stock List</button>
         </div>
     );
 };

@@ -1,11 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import axios from 'axios';
 
 const Login = () => {
-    const [userId, setUserId] = useState('');
-    const [userPw, setUserPw] = useState('');
+    const [userInfo,setUserInfo] = useState({
+        userId:"",
+        userPw:""
+        });
     const [error, setError] = useState('');
     const navigate = useNavigate();
+
+    axios.defaults.withCredentials = true;
 
     const loginRequest = async (userId, userPw) => {
         try {
@@ -14,11 +19,14 @@ const Login = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                credentials: 'include',
                 body: JSON.stringify({ userId, userPw })
             });
 
             if (response.ok) {
                 const data = await response.json();
+                localStorage.setItem('userId', userId);
+                console.log(userId);
                 navigate('/main');
             } else {
                 const errorMessage = await response.text();
@@ -34,31 +42,31 @@ const Login = () => {
             <section className="login-container">
                 <section className="login-field-container">
                     <h1 className="login-title">로그인</h1>
-                    <div className="filed-text">아이디</div>
+                    <div className="field-text">아이디</div>
                     <input
                         className="input-field"
                         type="text"
-                        value={userId}
-                        onChange={(e) => setUserId(e.target.value)}
-                        placeholder="아이디를 입력하세용."
+                        value={userInfo.userId}
+                        onChange={(e) => setUserInfo(prevState => ({...prevState, userId:e.target.value}))}
+                        placeholder="아이디를 입력하세요."
                     />
-                    <div className="filed-text">비밀번호</div>
+                    <div className="field-text">비밀번호</div>
                     <input
                         className="input-field"
                         type="password"
-                        value={userPw}
-                        onChange={(e) => setUserPw(e.target.value)}
+                        value={userInfo.userPw}
+                        onChange={(e) => setUserInfo(prevState => ({...prevState, userPw:e.target.value}))}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
-                                loginRequest(userId, userPw);
+                                loginRequest(userInfo.userId, userInfo.userPw);
                             }
                         }}
-                        placeholder="비밀번호를 입력하세용."
+                        placeholder="비밀번호를 입력하세요."
                     />
                     {error && <div className="error-message">{error}</div>}
                     <button
                         className="login-button"
-                        onClick={() => { loginRequest(userId, userPw); }}
+                        onClick={() => { loginRequest(userInfo.userId, userInfo.userPw); }}
                     >
                         로그인
                     </button>
