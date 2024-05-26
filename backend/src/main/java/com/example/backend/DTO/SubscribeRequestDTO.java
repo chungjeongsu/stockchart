@@ -7,5 +7,6 @@ import lombok.Setter;
 
 @Getter@Setter@NoArgsConstructor@AllArgsConstructor
 public class SubscribeRequestDTO {
+    private String userId;
     private Long stockCode;
 }

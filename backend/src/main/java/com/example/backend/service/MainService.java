@@ -2,10 +2,12 @@ package com.example.backend.service;
 
 import com.example.backend.DTO.MyStockListResponseDTO;
 import com.example.backend.DTO.StockDTO;
+import com.example.backend.DTO.SubscribeRequestDTO;
 import com.example.backend.DTO.UserResponseDTO;
 import com.example.backend.entity.Stock;
 import com.example.backend.entity.Subscribe;
 import com.example.backend.entity.User;
+import com.example.backend.repository.StockRepository;
 import com.example.backend.repository.SubscribeRepository;
 import com.example.backend.repository.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -20,10 +22,12 @@ public class MainService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final SubscribeRepository subscribeRepository;
-    public MainService(ModelMapper modelMapper, UserRepository userRepository, SubscribeRepository subscribeRepository) {
+    private final StockRepository stockRepository;
+    public MainService(ModelMapper modelMapper, UserRepository userRepository, SubscribeRepository subscribeRepository, StockRepository stockRepository) {
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
         this.subscribeRepository = subscribeRepository;
+        this.stockRepository = stockRepository;
     }
 
     @Transactional(readOnly = true)
@@ -38,5 +42,14 @@ public class MainService {
     public UserResponseDTO getMyInfo(String userId){
         User findUser = userRepository.findByUserId(userId);
         return modelMapper.map(findUser, UserResponseDTO.class);
+    }
+
+    @Transactional
+    public StockDTO removeSubscribe(SubscribeRequestDTO subscribeRequestDTO){
+        User findUser = userRepository.findByUserId(subscribeRequestDTO.getUserId());
+        subscribeRepository.deleteByStock_StockCodeAndUser_UserCode(subscribeRequestDTO.getStockCode(), findUser.getUserCode());
+        Stock stock = stockRepository.findByStockCode(subscribeRequestDTO.getStockCode());
+
+        return modelMapper.map(stock, StockDTO.class);
     }
 }

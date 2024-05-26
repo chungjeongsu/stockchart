@@ -9,10 +9,7 @@ import com.example.backend.service.StockService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/stockList")
@@ -31,10 +28,9 @@ public class StockListController {
         return tool.res(HttpStatus.OK, "주식 목록입니다.", stockListResponseDTO);
     }
 
-    @GetMapping("/subscribe")
-    public ResponseEntity<ResponseDTO> subscribe(HttpSession httpSession, @RequestBody SubscribeRequestDTO subscribeRequestDTO){
-        String userId = (String) httpSession.getAttribute("userInfo");
-        StockDTO stockDTO = stockService.subscribe(userId, subscribeRequestDTO);
+    @PostMapping ("/subscribe")
+    public ResponseEntity<ResponseDTO> subscribe(@RequestBody SubscribeRequestDTO subscribeRequestDTO){
+        StockDTO stockDTO = stockService.subscribe(subscribeRequestDTO);
         return tool.res(HttpStatus.OK,"주식 구독 성공", stockDTO);
     }
 }

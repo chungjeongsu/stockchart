@@ -40,9 +40,10 @@ public class StockService {
     }
 
     @Transactional
-    public StockDTO subscribe(String userId, SubscribeRequestDTO subscribeRequestDTO) {
+    public StockDTO subscribe(SubscribeRequestDTO subscribeRequestDTO) {
         Stock findStock = stockRepository.findByStockCode(subscribeRequestDTO.getStockCode());
-        User findUser = userRepository.findByUserId(userId);
+        System.out.println(subscribeRequestDTO.getUserId()+"\n\n\n\n\n\n\n\n\n\n\n\n");
+        User findUser = userRepository.findByUserId(subscribeRequestDTO.getUserId());
         Subscribe saveSubscribe = new Subscribe();
         saveSubscribe.setStock(findStock);
         saveSubscribe.setUser(findUser);

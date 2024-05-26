@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface SubscribeRepository extends JpaRepository<Subscribe, Long> {
     List<Subscribe> findAllByUser_UserId(String userId);
-
+    
+    void deleteByStock_StockCodeAndUser_UserCode(Long stockCode, Long userCode);
 }

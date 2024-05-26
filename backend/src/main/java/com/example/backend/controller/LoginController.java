@@ -7,6 +7,7 @@ import com.example.backend.config.Tool;
 import com.example.backend.service.LoginService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,11 +25,10 @@ public class LoginController {
         this.loginService = loginService;
         this.tool = tool;
     }
-
     @PostMapping
-    public ResponseEntity<ResponseDTO> login(HttpSession httpSession, @RequestBody UserRequestDTO userRequestDTO){
-        httpSession.setAttribute("userId", userRequestDTO.getUserId());
+    public ResponseEntity<ResponseDTO> login(@RequestBody UserRequestDTO userRequestDTO){
         UserResponseDTO userResponseDTO = loginService.login(userRequestDTO);
+        System.out.println(userResponseDTO.toString());
         return tool.res(HttpStatus.OK, "로그인 성공", userResponseDTO);
     }
 }
