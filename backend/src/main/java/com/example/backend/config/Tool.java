@@ -26,7 +26,7 @@ public class Tool {
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,cookie.toString()).body(new ResponseDTO(code, msg, data));
     }
     public ResponseEntity<ResponseDTO> resErr(String msg){
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.BAD_REQUEST,msg, null));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO(null,msg, null));
     }
     public ResponseEntity<ResponseDTO> resCustom(HttpStatus code, String msg, Object data){
         return ResponseEntity.ok().body(new ResponseDTO(code, msg, data));

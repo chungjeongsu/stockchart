@@ -26,7 +26,7 @@ public class LoginService {
         if(user == null){
             throw new EntityExistsException("유저가 없습니다.");
         }
-        if(user.getUserPw() != userRequestDTO.getUserPw()){
+        if(!user.getUserPw().equals(userRequestDTO.getUserPw())){
             throw new LoginFailedException("아이디 또는 비밀번호가 틀립니다.");
         }
         //유저존재, 아이디 비밀번호 맞는 경우
