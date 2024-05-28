@@ -18,12 +18,12 @@ const Join = () => {
                 },
                 body: JSON.stringify(user)
             });
-            if (response.ok) {
-                const data = await response.json();
+            const data = await response.json();
+            if(data.code === "OK"){
                 alert("회원가입 되셨습니다.");
                 navigate('/');
             } else {
-                alert("회원가입 실패");
+                alert("회원가입 실패: " + data.msg);
             }
         } catch (err) {
             console.error(err);
@@ -41,7 +41,6 @@ const Join = () => {
                         type="text"
                         value={user.userId}
                         onChange={(e) => setUser({ ...user, userId: e.target.value })}
-                        required
                     />
                 </div>
                 <div>
@@ -50,7 +49,6 @@ const Join = () => {
                         type="password"
                         value={user.userPw}
                         onChange={(e) => setUser({ ...user, userPw: e.target.value })}
-                        required
                     />
                 </div>
                 <div>
@@ -59,7 +57,6 @@ const Join = () => {
                         type="text"
                         value={user.userName}
                         onChange={(e) => setUser({ ...user, userName: e.target.value })}
-                        required
                     />
                 </div>
                 <button type="submit">가입하기</button>

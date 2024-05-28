@@ -23,13 +23,15 @@ const Login = () => {
                 body: JSON.stringify({ userId, userPw })
             });
 
-            if (response.ok) {
-                const data = await response.json();
+            const data = await response.json();
+            if(data.code === 'OK'){
                 localStorage.setItem('userId', userId);
                 console.log(userId);
+                alert("환영합니다. "+  userId + "님");
                 navigate('/main');
             } else {
-                const errorMessage = await response.text();
+                const errorMessage = data.msg;
+                alert(errorMessage);
                 setError(errorMessage);
             }
         } catch (err) {
@@ -63,7 +65,6 @@ const Login = () => {
                         }}
                         placeholder="비밀번호를 입력하세요."
                     />
-                    {error && <div className="error-message">{error}</div>}
                     <button
                         className="login-button"
                         onClick={() => { loginRequest(userInfo.userId, userInfo.userPw); }}
